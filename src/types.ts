@@ -1801,7 +1801,7 @@ export interface OnHandlerInterface<
 
   // app.on(method[], path, handler)
   <
-    Ms extends string[],
+    const Ms extends string[],
     P extends string,
     MergedPath extends MergePath<BasePath, P>,
     R extends HandlerResponse<any> = any,
@@ -1820,7 +1820,7 @@ export interface OnHandlerInterface<
 
   // app.on(method[], path, handler x2)
   <
-    Ms extends string[],
+    const Ms extends string[],
     P extends string,
     MergedPath extends MergePath<BasePath, P>,
     R extends HandlerResponse<any> = any,
@@ -1841,7 +1841,7 @@ export interface OnHandlerInterface<
 
   // app.on(method[], path, handler x3)
   <
-    Ms extends string[],
+    const Ms extends string[],
     P extends string,
     MergedPath extends MergePath<BasePath, P>,
     R extends HandlerResponse<any> = any,
@@ -1864,7 +1864,7 @@ export interface OnHandlerInterface<
 
   // app.on(method[], path, handler x4)
   <
-    Ms extends string[],
+    const Ms extends string[],
     P extends string,
     MergedPath extends MergePath<BasePath, P>,
     R extends HandlerResponse<any> = any,
@@ -1894,7 +1894,7 @@ export interface OnHandlerInterface<
 
   // app.on(method[], path, handler x5)
   <
-    Ms extends string[],
+    const Ms extends string[],
     P extends string,
     MergedPath extends MergePath<BasePath, P>,
     R extends HandlerResponse<any> = any,
@@ -1927,7 +1927,7 @@ export interface OnHandlerInterface<
 
   // app.on(method[], path, handler x6)
   <
-    Ms extends string[],
+    const Ms extends string[],
     P extends string,
     MergedPath extends MergePath<BasePath, P>,
     R extends HandlerResponse<any> = any,
@@ -1963,7 +1963,7 @@ export interface OnHandlerInterface<
 
   // app.on(method[], path, handler x7)
   <
-    Ms extends string[],
+    const Ms extends string[],
     P extends string,
     MergedPath extends MergePath<BasePath, P>,
     R extends HandlerResponse<any> = any,
@@ -2002,7 +2002,7 @@ export interface OnHandlerInterface<
 
   // app.on(method[], path, handler x8)
   <
-    Ms extends string[],
+    const Ms extends string[],
     P extends string,
     MergedPath extends MergePath<BasePath, P>,
     R extends HandlerResponse<any> = any,
@@ -2044,7 +2044,7 @@ export interface OnHandlerInterface<
 
   // app.on(method[], path, handler x9)
   <
-    Ms extends string[],
+    const Ms extends string[],
     P extends string,
     MergedPath extends MergePath<BasePath, P>,
     R extends HandlerResponse<any> = any,
@@ -2089,7 +2089,7 @@ export interface OnHandlerInterface<
 
   // app.on(method[], path, handler x10)
   <
-    Ms extends string[],
+    const Ms extends string[],
     P extends string,
     MergedPath extends MergePath<BasePath, P>,
     R extends HandlerResponse<any> = any,
@@ -2135,31 +2135,55 @@ export interface OnHandlerInterface<
     MergePath<BasePath, P>
   >
 
-  // app.on(method[], path, ...handler)
-  <P extends string, R extends HandlerResponse<any> = any, I extends Input = BlankInput>(
-    methods: string[],
+  // app.on(method[], path, ...handlers[])
+  <
+    const Ms extends string[],
+    P extends string,
+    R extends HandlerResponse<any> = any,
+    I extends Input = BlankInput,
+  >(
+    methods: Ms,
     path: P,
     ...handlers: [H<E, MergePath<BasePath, P>, I, R>, ...H<E, MergePath<BasePath, P>, I, R>[]]
   ): HonoBase<
     E,
-    S & ToSchema<string, MergePath<BasePath, P>, I, MergeTypedResponse<R>>,
+    S & ToSchema<Ms[number], MergePath<BasePath, P>, I, MergeTypedResponse<R>>,
     BasePath,
     MergePath<BasePath, P>
   >
 
-  // app.on(method | method[], path[], ...handlers[])
+  // app.on(method, path[], ...handlers[])
   <
+    M extends string,
     const Ps extends string[],
     I extends Input = BlankInput,
     R extends HandlerResponse<any> = any,
     E2 extends Env = E,
   >(
-    methods: string | string[],
+    methods: M,
     paths: Ps,
     ...handlers: H<E2, MergePath<BasePath, Ps[number]>, I, R>[]
   ): HonoBase<
     E,
-    S & ToSchema<string, MergePath<BasePath, Ps[number]>, I, MergeTypedResponse<R>>,
+    S & ToSchema<M, MergePath<BasePath, Ps[number]>, I, MergeTypedResponse<R>>,
+    BasePath,
+    Ps extends [...string[], infer LastPath extends string] ? MergePath<BasePath, LastPath> : never
+  >
+
+  // app.on(method[], path[], ...handlers[])
+  <
+    const Ms extends string[],
+    const Ps extends string[],
+    I extends Input = BlankInput,
+    R extends HandlerResponse<any> = any,
+    E2 extends Env = E,
+  >(
+    methods: Ms,
+    paths: Ps,
+    ...handlers: H<E2, MergePath<BasePath, Ps[number]>, I, R>[]
+  ): HonoBase<
+    E,
+    S & ToSchema<Ms[number], MergePath<BasePath, Ps[number]>, I, MergeTypedResponse<R>>,
     BasePath,
     Ps extends [...string[], infer LastPath extends string] ? MergePath<BasePath, LastPath> : never
   >
